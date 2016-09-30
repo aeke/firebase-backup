@@ -9,8 +9,8 @@ config = {
   "apiKey": "YOUR-API-KEY",
   "authDomain": "YOUR-FIREBASE-DOMAIN.firebaseapp.com",
   "databaseURL": "https://YOUR-FIREBASE-DOMAIN.firebaseio.com",
-  "storageBucket": "YOUR-FIREBASE-DOMAIN9.appspot.com",
-  "serviceAccount": "YOUR-SECRET-FILE.json"
+  "storageBucket": "YOUR-FIREBASE-DOMAIN.appspot.com",
+  "serviceAccount": "YOUR-CLIENTSECRET-FILE.json"
 }
 
 firebase = pyrebase.initialize_app(config)
