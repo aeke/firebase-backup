@@ -1,6 +1,6 @@
 # Firebase Backup v0.1
 
-Compressing your Firebase database and upload on storage bucket
+Compress your Firebase database and upload on storage bucket
 
 ### Install
 
