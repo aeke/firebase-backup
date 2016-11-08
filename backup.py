@@ -1,16 +1,18 @@
 # -*- coding: utf-8 -*-
-import uuid,datetime
+import uuid
+import datetime
 import httplib2
-import pyrebase,logging
+import pyrebase
+import logging
 import gzip
 
 # Firebase Config
 config = {
-  "apiKey": "YOUR-API-KEY",
-  "authDomain": "YOUR-FIREBASE-DOMAIN.firebaseapp.com",
-  "databaseURL": "https://YOUR-FIREBASE-DOMAIN.firebaseio.com",
-  "storageBucket": "YOUR-FIREBASE-DOMAIN.appspot.com",
-  "serviceAccount": "YOUR-CLIENTSECRET-FILE.json"
+    "apiKey": "YOUR-API-KEY",
+    "authDomain": "YOUR-FIREBASE-DOMAIN.firebaseapp.com",
+    "databaseURL": "https://YOUR-FIREBASE-DOMAIN.firebaseio.com",
+    "storageBucket": "YOUR-FIREBASE-DOMAIN.appspot.com",
+    "serviceAccount": "YOUR-CLIENTSECRET-FILE.json"
 }
 
 firebase = pyrebase.initialize_app(config)
@@ -24,7 +26,7 @@ print("=============| FIREBASE BACKUP TOOL v0.1 |=============")
 print("=======================================================\n\nStarting...")
 
 now = datetime.datetime.utcnow()
-upload_name = 'database_firebase_' + now.strftime('%Y%m%d%H%M%S') + '.json' 
+upload_name = 'database_firebase_' + now.strftime('%Y%m%d%H%M%S') + '.json'
 gzip_name = upload_name + '.gz'
 
 h = httplib2.Http()
