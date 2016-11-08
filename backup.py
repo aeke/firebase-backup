@@ -21,6 +21,7 @@ db = firebase.database()
 auth = firebase.auth()
 storage = firebase.storage()
 
+
 print("\n\n=======================================================")
 print("=============| FIREBASE BACKUP TOOL v0.1 |=============")
 print("=======================================================\n\nStarting...")
