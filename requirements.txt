@@ -9,7 +9,7 @@ pyasn1-modules==0.0.8
 pycrypto==2.6.1
 Pyrebase==3.0.15
 python-jwt==1.2.1
-requests==2.11.1
+requests==2.20.0
 requests-toolbelt==0.7.0
 rsa==4.1
 six==1.10.0
