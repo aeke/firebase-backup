@@ -1,13 +1,26 @@
-# Firebase Backup v0.1
+This simple Python tool can be used to backup your Firebase database. It backs up your database with a specific timestamp and uploads it to Firebase Storage.
 
-> Compress your Firebase database and upload on storage bucket
+## Usage
 
-### Install
+1. Update your Firebase Config settings in the `backup.py` file.
+2. Run the `backup.py` file using Python 3.x.
+3. After the backup process is complete, you can find your backup in Firebase Storage.
 
-    virtualenv -p python3 env
-    source env/bin/activate
-    pip install -r requirements.txt
+## Requirements
 
-### Run
+- Python 3.x
+- httplib2
+- pyrebase
 
-    python backup.py
+## Firebase Config Settings
+
+You should update your Firebase Config settings in the `backup.py` file as follows:
+
+```python
+firebase_config = {
+    "apiKey": "YOUR-API-KEY",
+    "authDomain": "YOUR-FIREBASE-DOMAIN.firebaseapp.com",
+    "databaseURL": "https://YOUR-FIREBASE-DOMAIN.firebaseio.com",
+    "storageBucket": "YOUR-FIREBASE-DOMAIN.appspot.com",
+    "serviceAccount": "YOUR-CLIENTSECRET-FILE.json"
+}
