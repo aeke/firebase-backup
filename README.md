@@ -14,7 +14,7 @@ This script downloads the entire Firebase database and uploads it as a GZipped J
 First, ensure you have Python 3 and pip installed on your machine. Then, install the required Python libraries using pip:
 
 ```sh
-pip install pyrebase4 httplib2
+pip install -r requirements.txt
 ```
 
 ## Configuration
