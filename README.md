@@ -38,7 +38,7 @@ Replace the placeholders with your actual Firebase project information.
 Run the script using Python:
 
 ```sh
-python backup_script.py
+python backup.py
 ```
 
 This will:
