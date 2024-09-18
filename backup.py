@@ -7,12 +7,12 @@ import logging
 import gzip
 
 # Constants
-FIREBASE_DOMAIN = "YOUR-FIREBASE-DOMAIN"
-CLIENT_SECRET_FILE = "YOUR-CLIENTSECRET-FILE.json"
+FIREBASE_DOMAIN = "signage-da577"
+CLIENT_SECRET_FILE = "signage-da577-firebase-adminsdk-qu9tv-1765d0bcd5.json"
 
 # Firebase Config
 config = {
-    "apiKey": "YOUR-API-KEY",
+    "apiKey": "AIzaSyC0vpvpaaETB5HdAvx4j-mHLGwOJHzh7TM",
     "authDomain": f"{FIREBASE_DOMAIN}.firebaseapp.com",
     "databaseURL": f"https://{FIREBASE_DOMAIN}.firebaseio.com",
     "storageBucket": f"{FIREBASE_DOMAIN}.appspot.com",
