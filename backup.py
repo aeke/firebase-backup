@@ -1,37 +1,31 @@
 # -*- coding: utf-8 -*-
 import uuid
 import datetime
-import httplib2
-import pyrebase
 import logging
 import gzip
+import firebase_admin
+from firebase_admin import credentials, db as admin_db, storage as admin_storage
+import json
 
 # Constants
 FIREBASE_DOMAIN = "signage-da577"
 CLIENT_SECRET_FILE = "signage-da577-firebase-adminsdk-qu9tv-1765d0bcd5.json"
 
-# Firebase Config
-config = {
-    "apiKey": "AIzaSyC0vpvpaaETB5HdAvx4j-mHLGwOJHzh7TM",
-    "authDomain": f"{FIREBASE_DOMAIN}.firebaseapp.com",
-    "databaseURL": f"https://{FIREBASE_DOMAIN}.firebaseio.com",
-    "storageBucket": f"{FIREBASE_DOMAIN}.appspot.com",
-    "serviceAccount": CLIENT_SECRET_FILE
-}
-
 logging.basicConfig(level=logging.INFO)
 
 
-def initialize_firebase(config):
+def initialize_firebase(service_account_file_path, firebase_domain_name):
     """
-    :param config: Dictionary containing Firebase configuration settings.
-    :return: Tuple containing Firebase database, authentication, and storage objects.
+    Initializes the Firebase Admin SDK.
+    :param service_account_file_path: Path to the Firebase service account JSON file.
+    :param firebase_domain_name: The Firebase project domain name.
     """
-    firebase = pyrebase.initialize_app(config)
-    db = firebase.database()
-    auth = firebase.auth()
-    storage = firebase.storage()
-    return db, auth, storage
+    cred = credentials.Certificate(service_account_file_path)
+    firebase_admin.initialize_app(cred, {
+        'databaseURL': f"https://{firebase_domain_name}.firebaseio.com",
+        'storageBucket': f"{firebase_domain_name}.appspot.com"
+    })
+    logging.info("Firebase Admin SDK initialized.")
 
 
 def get_file_names():
@@ -49,38 +43,47 @@ def get_file_names():
     return upload_name, gzip_name
 
 
-def download_database(auth, config, http_client):
+def download_database():
     """
-    :param auth: Firebase authentication client for creating and signing JWT tokens.
-    :param config: Dictionary containing configuration settings, particularly the Firebase database URL.
-    :param http_client: HTTP client used for making requests to external services.
-    :return: The data extracted from the Firebase database.
+    Downloads the entire Firebase Realtime Database.
+    :return: The database content as a UTF-8 encoded JSON string.
     """
-    firebase_token = auth.create_custom_token(str(uuid.uuid4()))
-    user = auth.sign_in_with_custom_token(firebase_token)
-    token = user['idToken']
-    firebase_url = config['databaseURL'] + '/.json?format=export&auth=' + token
-    logging.info(f"Connected Firebase URL ===> {firebase_url}")
-    resp_headers, data = http_client.request(firebase_url, "GET")
-    return data
+    logging.info("Fetching data from Firebase Realtime Database...")
+    ref = admin_db.reference('/')
+    data = ref.get()
+    # The data from ref.get() is typically a Python dict or list.
+    # It needs to be a JSON string then bytes to be gzipped.
+    logging.info("Data fetched successfully.")
+    return json.dumps(data, indent=4).encode('utf-8') # Added indent for readability if unzipped
 
 
-
-def upload_backup(storage, gzip_name):
+def upload_backup(gzip_name):
     """
-    :param storage: Storage object to handle the upload process.
+    Uploads the gzipped backup file to Firebase Storage.
     :param gzip_name: The name of the gzip file to be uploaded.
     :return: None
     """
-    logging.info("Uploading....")
-    storage.child(f"backups/{gzip_name}").put(gzip_name)
-    logging.info("Completed!")
+    logging.info(f"Uploading {gzip_name} to Firebase Storage...")
+    bucket = admin_storage.bucket()
+    blob = bucket.blob(f"backups/{gzip_name}")
+    blob.upload_from_filename(gzip_name)
+    logging.info("Upload completed!")
 
 
-# Main script
-db, auth, storage = initialize_firebase(config)
-upload_name, gzip_name = get_file_names()
-data = download_database(auth, config, httplib2.Http())
-with gzip.open(gzip_name, 'wb') as f_out:
-    f_out.write(data)
-upload_backup(storage, gzip_name)
+# Main script execution
+if __name__ == "__main__":
+    initialize_firebase(CLIENT_SECRET_FILE, FIREBASE_DOMAIN)
+    upload_name, gzip_name = get_file_names()
+    
+    logging.info(f"Generated filenames: {upload_name}, {gzip_name}")
+    
+    data = download_database()
+    
+    logging.info(f"Compressing data to {gzip_name}...")
+    with gzip.open(gzip_name, 'wb') as f_out:
+        f_out.write(data)
+    logging.info("Compression complete.")
+    
+    upload_backup(gzip_name)
+    
+    logging.info("Backup process finished successfully.")
